@@ -1,0 +1,82 @@
+﻿
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h2>Checkout Page</h2>
+
+<form id="checkoutForm">
+    <!-- Hidden field to store the product ID -->
+    <input type="hidden" id="productId" name="productId" value="@ViewBag.ProductId">
+    <input type="hidden" id="productPrice" name="productPrice" value="@ViewBag.ProductPrice">
+
+    <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <input type="text" class="form-control" id="firstName" name="firstName" required>
+    </div>
+
+    <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <input type="text" class="form-control" id="lastName" name="lastName" required>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+
+    <div class="form-group">
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
+    </div>
+
+    <div class="form-group">
+        <label for="address">Address:</label>
+        <input type="text" class="form-control" id="address" name="address" required>
+    </div>
+
+    <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input type="number" class="form-control" id="quantity" name="quantity" required>
+    </div>
+    <br>
+
+    <button type="button" class="btn btn-primary" onclick="submitOrder()">Place Order</button>
+</form>
+
+<script>
+    function submitOrder() {
+        // Get values from the form
+        var formData = {
+            P_ID: $("#productId").val(),
+            FristName: $("#firstName").val(),
+            LastName: $("#lastName").val(),
+            Email: $("#email").val(),
+            Phonenumber: $("#phoneNumber").val(),
+            Address: $("#address").val(),
+            Quantity: $("#quantity").val(),
+            Price: $("#productPrice").val() * $("#quantity").val(),
+            OrderDate: new Date()
+        };
+
+        $.ajax({
+            url: "https://localhost:44390/api/CustomerOrders",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (data) {
+                // Handle success, e.g., show a confirmation message
+                console.log("Order placed successfully:", data);
+                showOrderConfirmation();
+            },
+            error: function (error) {
+                // Handle error, e.g., show an error message
+                console.error("Error placing order:", error);
+            }
+        });
+    }
+    function showOrderConfirmation() {
+        // Display a confirmation message to the user
+        alert("Order completed successfully! Thank you for your purchase.");
+    }
+</script>
